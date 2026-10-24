@@ -18,6 +18,11 @@ npm start          # backend on http://localhost:8787 (mock model until you add 
 Then load `extension/` as an unpacked extension in Chrome, open <http://localhost:8787/demo/> and click the
 Show Me icon. Details in [TESTING.md](TESTING.md).
 
+## Exam: does the adapter learn?
+
+[exam/README.md](exam/README.md) tests Show Me's next-action step on Mind2Web: Mubit-routed vs provider-only
+(accuracy, cost, speed, adapter share), on new tasks, new websites and new domains.
+
 ## How it fits together
 
 | Part | What it does |

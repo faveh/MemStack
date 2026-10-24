@@ -1,0 +1,226 @@
+{
+  "generatedAt": "2026-10-24T15:32:51.160Z",
+  "spendUsd": 3.79,
+  "paidCalls": 2202,
+  "routes": {
+    "teacher": {
+      "model": "claude-sonnet-5-5",
+      "record": "full",
+      "splits": {
+        "train": {
+          "steps": 400,
+          "answered": 400,
+          "tasks": 60,
+          "sites": 60,
+          "stepSR": 64.8,
+          "eleAcc": 70.5,
+          "opF1": 82.3,
+          "medianMs": 1312,
+          "p90Ms": 2347,
+          "usdPer1k": 3.02,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 1183
+        }
+      }
+    },
+    "sonnet": {
+      "model": "claude-sonnet-5-5",
+      "record": "metadata",
+      "splits": {
+        "test_task": {
+          "steps": 200,
+          "answered": 200,
+          "tasks": 27,
+          "sites": 27,
+          "stepSR": 68,
+          "eleAcc": 76.5,
+          "opF1": 84.4,
+          "medianMs": 1278,
+          "p90Ms": 1952,
+          "usdPer1k": 3.044,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 1187
+        },
+        "test_website": {
+          "steps": 200,
+          "answered": 200,
+          "tasks": 31,
+          "sites": 10,
+          "stepSR": 58.5,
+          "eleAcc": 69.5,
+          "opF1": 73.7,
+          "medianMs": 1167,
+          "p90Ms": 1929,
+          "usdPer1k": 3.06,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 1202
+        },
+        "test_domain": {
+          "steps": 200,
+          "answered": 200,
+          "tasks": 38,
+          "sites": 38,
+          "stepSR": 60.5,
+          "eleAcc": 67,
+          "opF1": 83.9,
+          "medianMs": 1174,
+          "p90Ms": 1991,
+          "usdPer1k": 2.942,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 1142
+        },
+        "all": {
+          "steps": 600,
+          "answered": 600,
+          "tasks": 96,
+          "sites": 75,
+          "stepSR": 62.3,
+          "eleAcc": 71,
+          "opF1": 80.7,
+          "medianMs": 1199,
+          "p90Ms": 1947,
+          "usdPer1k": 3.016,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 1173
+        }
+      }
+    },
+    "haiku": {
+      "model": "claude-haiku-4-5",
+      "record": "metadata",
+      "splits": {
+        "test_task": {
+          "steps": 200,
+          "answered": 200,
+          "tasks": 27,
+          "sites": 27,
+          "stepSR": 57.5,
+          "eleAcc": 70,
+          "opF1": 80.4,
+          "medianMs": 926,
+          "p90Ms": 1529,
+          "usdPer1k": 1.186,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 893
+        },
+        "test_website": {
+          "steps": 200,
+          "answered": 200,
+          "tasks": 31,
+          "sites": 10,
+          "stepSR": 52.5,
+          "eleAcc": 68,
+          "opF1": 72.7,
+          "medianMs": 903,
+          "p90Ms": 1641,
+          "usdPer1k": 1.212,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 889
+        },
+        "test_domain": {
+          "steps": 200,
+          "answered": 200,
+          "tasks": 38,
+          "sites": 38,
+          "stepSR": 52,
+          "eleAcc": 63,
+          "opF1": 79,
+          "medianMs": 933,
+          "p90Ms": 1899,
+          "usdPer1k": 1.199,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 857
+        },
+        "all": {
+          "steps": 600,
+          "answered": 600,
+          "tasks": 96,
+          "sites": 75,
+          "stepSR": 54,
+          "eleAcc": 67,
+          "opF1": 77.4,
+          "medianMs": 922,
+          "p90Ms": 1764,
+          "usdPer1k": 1.199,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 879
+        }
+      }
+    },
+    "luna": {
+      "model": "gpt-6-luna",
+      "record": "metadata",
+      "splits": {
+        "test_task": {
+          "steps": 200,
+          "answered": 200,
+          "tasks": 27,
+          "sites": 27,
+          "stepSR": 53,
+          "eleAcc": 61.5,
+          "opF1": 70,
+          "medianMs": 1528,
+          "p90Ms": 2208,
+          "usdPer1k": 0.095,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 765
+        },
+        "test_website": {
+          "steps": 200,
+          "answered": 200,
+          "tasks": 31,
+          "sites": 10,
+          "stepSR": 48,
+          "eleAcc": 55.5,
+          "opF1": 63.1,
+          "medianMs": 1421,
+          "p90Ms": 2253,
+          "usdPer1k": 0.094,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 756
+        },
+        "test_domain": {
+          "steps": 200,
+          "answered": 200,
+          "tasks": 38,
+          "sites": 38,
+          "stepSR": 48.5,
+          "eleAcc": 56.5,
+          "opF1": 65.9,
+          "medianMs": 1533,
+          "p90Ms": 3989,
+          "usdPer1k": 0.092,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 737
+        },
+        "all": {
+          "steps": 600,
+          "answered": 600,
+          "tasks": 96,
+          "sites": 75,
+          "stepSR": 49.8,
+          "eleAcc": 57.8,
+          "opF1": 66.3,
+          "medianMs": 1483,
+          "p90Ms": 2629,
+          "usdPer1k": 0.094,
+          "adapterShare": 0,
+          "adapterVersions": [],
+          "inTokensMedian": 753
+        }
+      }
+    }
+  }
+}
