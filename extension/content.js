@@ -138,6 +138,16 @@
     });
   }
 
+  // The text on screen right now. page.text always starts at the top of the page, so
+  // without this a scroll changes nothing the model can see and it scrolls again.
+  function screenText() {
+    const SITE_CHROME = 'nav,header,footer,aside,[role=navigation],[role=banner],[role=contentinfo]';
+    const onScreen = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+    return clean([...document.querySelectorAll(BLOCKS)]
+      .filter(el => !el.querySelector(BLOCKS) && !el.closest(SITE_CHROME) && onScreen(el) && isVisible(el))
+      .map(el => el.innerText).join(' '), 1000);
+  }
+
   function snapshot() {
     const all = [...document.querySelectorAll(SELECTOR)].filter(isVisible);
     // An open modal blocks the page: show only what is inside it. Filter before
@@ -155,6 +165,7 @@
       elements: kept.map(k => describe(k.el)),
       blocks: textBlocks(),
       text: clean(document.body?.innerText, 4000),
+      screenText: screenText(),
     };
   }
 

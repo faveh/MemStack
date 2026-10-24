@@ -83,7 +83,8 @@ export function formatPage(page) {
   if (page.headings?.length) lines.push(`Headings: ${page.headings.slice(0, 5).join(' | ')}`);
   if (page.scroll) lines.push(`Scroll: ${page.scroll}`);
   // A little visible text tells the model what state the page is in ("Now playing", errors…).
-  const text = (page.text || '').replace(/\s+/g, ' ').trim().slice(0, 300);
+  // It is the text on screen, so a scroll shows the model what it revealed.
+  const text = (page.screenText || page.text || '').replace(/\s+/g, ' ').trim().slice(0, 600);
   if (text) lines.push(`Text: ${text}`);
   lines.push('Elements:');
   const elements = (page.elements || []).slice(0, MAX_ELEMENTS);
@@ -140,7 +141,9 @@ export function buildNextActionMessage({ goal, page, history = [], demo }) {
 }
 
 export function buildDoneCheckMessage({ goal, page }) {
-  const text = (page.text || '').replace(/\s+/g, ' ').trim().slice(0, 1500);
+  // What is on screen first: the agent stops where it found the answer, which on a long
+  // page is far below the first 1,500 characters.
+  const text = [page.screenText, page.text].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim().slice(0, 1500);
   return `Goal: ${goal}\n\nURL: ${page.url}\nPage text: ${text}\n\nAnswer with one JSON object only.`;
 }
 
