@@ -9,6 +9,7 @@
 
 import { loadEnv } from '../server/env.js';
 import { TASKS, buildNextActionMessage, buildDoneCheckMessage } from '../server/prompts.js';
+import { NEW_TAB, TUBE_URL, resultTitles, trattoria, trattoriaLesson, tubelyHome, tubelyResults, tubelyWatch } from '../exam/showme/pages.js';
 
 loadEnv();
 const { callTask, getConfig } = await import('../server/llm.js');
@@ -136,6 +137,51 @@ const generators = [
     return { goal, page: { url, title: 'YouTube', headings: [], scroll: '0% down, 412 controls on the page', elements }, history };
   },
 
+  // Show Me's own demo sites, as the extension snapshots them, at every step of a booking
+  // or a video. Names and artists come from this file's lists only: exam/showme/heldout.js
+  // keeps other names, artists and two page variants back for the held-out exam.
+  function trattoriaNove() {
+    const n = String(Math.floor(Math.random() * 8) + 1);
+    const day = pick(['Tonight', 'Tomorrow', 'Saturday']);
+    const person = pick(NAMES).split(' ')[0];
+    const when = day === 'Tonight' ? pick(['', ' tonight']) : ` ${day.toLowerCase()}`;
+    const goal = pick([
+      `Book a table for ${NUMBERS[n - 1] || n}${when} at eight, name ${person}`,
+      `Reserve a table for ${n}${when} at 20:00 under ${person}`,
+      `Book Trattoria Nove for ${n} people${when} at 8pm, the name is ${person}`,
+    ]);
+    const steps = [
+      { action: 'click', label: 'No thanks', role: 'button', value: '' },
+      { action: 'select', label: 'Party size', role: 'select', value: n },
+      ...(day === 'Tonight' ? [] : [{ action: 'select', label: 'Day', role: 'select', value: day }]),
+      { action: 'click', label: 'Sitting C', role: 'radio', value: '' },
+      { action: 'type', label: 'Name for the booking', role: 'textbox', value: person },
+      { action: 'click', label: 'Reserve table', role: 'button', value: '' },
+    ];
+    const stage = Math.floor(Math.random() * (steps.length + 1));
+    const history = steps.slice(0, stage);
+    const did = label => history.some(s => s.label === label);
+    const page = stage === 0 ? trattoria({ dialog: true })
+      : stage === steps.length ? trattoria({ confirmed: { party: n, day, sitting: 'C', name: person } })
+      : trattoria({ party: did('Party size') ? n : '', day: did('Day') ? day : 'Tonight', sitting: did('Sitting C') ? 'C' : undefined, name: did('Name for the booking') ? person : '' });
+    return { goal, page, history, lesson: trattoriaLesson() };
+  },
+
+  function tubely() {
+    const artist = pick(ARTISTS);
+    const goal = pick([`open ${TUBE_URL} and play a ${artist} video`, `Play ${artist} on Tubely`, `Find a ${artist} video on Tubely and play it`]);
+    const title = resultTitles(artist)[pick([0, 0, 1])];
+    const steps = [
+      { action: 'open_url', label: null, role: null, value: TUBE_URL },
+      pick([{ action: 'type', label: 'Search videos', role: 'combobox', value: artist, submit: true }, { action: 'open_url', label: null, role: null, value: `${TUBE_URL}results.html?q=${encodeURIComponent(artist)}` }]),
+      { action: 'click', label: `▶ ${title} Tubely · 1.2M views`, role: 'link', value: '' },
+      { action: 'click', label: '▶ Play', role: 'button', value: '' },
+    ];
+    const stage = Math.floor(Math.random() * (steps.length + 1));
+    const pages = [NEW_TAB, tubelyHome(), tubelyResults(artist), tubelyWatch(title), tubelyWatch(title, { playing: true })];
+    return { goal, page: pages[stage], history: steps.slice(0, stage) };
+  },
+
   function support() {
     idCounter = Math.floor(Math.random() * 25) + 1;
     const order = `#${Math.floor(10000 + Math.random() * 90000)}`;
@@ -148,6 +194,12 @@ const generators = [
     return { goal, page: { url: 'https://help.example/contact', title: 'Contact us', headings: ['How can we help?'], elements }, history: [] };
   },
 ];
+
+// Half the calls are on the demo sites, the pages the live demo sends.
+const DEMO_SITES = ['trattoriaNove', 'tubely'];
+const sample = () => (Math.random() < 0.5
+  ? pick(generators.filter(g => DEMO_SITES.includes(g.name)))
+  : pick(generators.filter(g => !DEMO_SITES.includes(g.name))))();
 
 // About a third of restaurant calls carry a recalled lesson, as the live agent's do
 // after a "show me". Lessons are always sensible: a wrong lesson would train a wrong adapter.
@@ -235,7 +287,7 @@ async function runPool(jobs) {
 
 const config = getConfig();
 if (dryRun) {
-  const s = pick(generators)();
+  const s = sample();
   console.log(buildNextActionMessage({ goal: s.goal, page: s.page, history: s.history, demo: maybeDemo(s) }));
   console.log('\nDone-check samples:');
   for (let i = 0; i < 6; i++) { const d = doneCheckSample(); console.log(`- ${d.goal}  →  ${d.text}`); }
@@ -250,7 +302,7 @@ console.log(`Seeding through Mubit: ${COUNT} next-action + ${CHECKS} done-check 
 const jobs = [];
 for (let i = 0; i < COUNT; i++) {
   jobs.push(async () => {
-    const s = pick(generators)();
+    const s = sample();
     await callTask({ task: TASKS.nextAction, userMessage: buildNextActionMessage({ goal: s.goal, page: s.page, history: s.history, demo: maybeDemo(s) }), sessionId: `seed-na-${Date.now()}-${i}`, kind: 'live' });
   });
 }
